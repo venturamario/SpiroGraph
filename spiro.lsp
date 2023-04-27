@@ -268,7 +268,7 @@
     ; 'gran' con el segundo elemento de grans[0] y grans[1] ya que es el interior del circulo
     (cond ((or (= gran (agafar-n 1(agafar-n 0(get 'spiro 'grans)))) (= gran (agafar-n 1(agafar-n 1(get 'spiro ' grans)))))
         ; ES INTERIOR ---> Usar formula 9
-        (print "---> ES INTERIOR") ;debugging comment
+        ;(print "---> ES INTERIOR") ;debugging comment
 
         ; Modificar el valor de 'interior' con true para indicar que es interior
         (putprop 'spiro t 'interior)
@@ -282,13 +282,13 @@
         (mover-lapiz (get 'spiro 'x) (get 'spiro 'y))
         ; Llamar a funión recursiva con los mismos parámetros que spirograph pero con p decrementado inc veces y con
         ; inici incrementado para el ángulo de giro con el incremento inc
-        (spirograph-recursiva-interior (- p inc) gran petit d inc (+ inc inici))
+        (spirograph-recursiva-interior (- p inc) gran petit d inc (+ inici inc))
 
 
     ; Hay que comparar 'gran' con el primer elemento de grans[0] y grans[1] ya que es el exterior del circulo
     ) ((or (= gran (agafar-n 0 (agafar-n 0 (get 'spiro 'grans)))) (= gran (agafar-n 0 (agafar-n 1 (get 'spiro ' grans)))))
         ; ES EXTERIOR ---> Usar formula 10
-        (print "---> ES EXTERIOR") ;debugging comment
+        ;(print "---> ES EXTERIOR") ;debugging comment
 
         ; Modificar el valor de 'interior' con nil para indicar que es exterior
         (putprop 'spiro nil 'interior)
@@ -302,7 +302,7 @@
         (mover-lapiz (get 'spiro 'x) (get 'spiro 'y))
         ; Llamar a funión recursiva con los mismos parámetros que spirograph pero con p decrementado inc veces y con
         ; inici incrementado para el ángulo de giro con el incremento inc
-        (spirograph-recursiva-exterior (- p inc) gran petit d inc (+ inc inici))
+        (spirograph-recursiva-exterior (- p inc) gran petit d inc (+ inici inc))
     )
     ; Caso trivial: los parametros recibidos no coinciden con los valores de la tabla 1 del encunciado
     (t (print "ERROR! ---> VALOR NO VALIDO")))
@@ -385,7 +385,7 @@
         (pinta (get 'spiro 'x) (get 'spiro 'y))
         ; Llamar a funión recursiva con los mismos parámetros que spirograph pero con p decrementado inc veces y con
         ; inici incrementado para el ángulo de giro con el incremento inc
-        (spirograph-recursiva-interior (- p inc) gran petit d inc (+ inc inici))
+        (spirograph-recursiva-interior (- p inc) gran petit d inc (+ inici inc))
     ))
 )
 
@@ -401,7 +401,7 @@
         (pinta (get 'spiro 'x) (get 'spiro 'y))
         ; Llamar a funión recursiva con los mismos parámetros que spirograph pero con p decrementado inc veces y con
         ; inici incrementado para el ángulo de giro con el incremento inc
-        (spirograph-recursiva-exterior (- p inc) gran petit d inc (+ inc inici))
+        (spirograph-recursiva-exterior (- p inc) gran petit d inc (+ inici inc))
     ))
 )
 
@@ -411,5 +411,5 @@
 
     ; Calcular numero de pasos:
     ; numPasos = 2pi * (reduir rgran rpetit) * (rgran/rpetit)
-    
+
 )
