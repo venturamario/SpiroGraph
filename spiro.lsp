@@ -407,9 +407,56 @@
 
 ;-----> 2.2 SPIRO
 (defun spiro (gran petit p inc inici)
-    ; Se debe calcular el numero de pasos y el angulo t y llamar a la función spiro
+    ; Esta función hace lo mismo que spirograph pero con un número de vueltas.
+    ; Se usa 'petits' en lugar de 'grans'
 
-    ; Calcular numero de pasos:
-    ; numPasos = 2pi * (reduir rgran rpetit) * (rgran/rpetit)
+    ; Se establece la posicion en la que se va a dibujar con el parametro 'petit'. Se tendrá que
+    ; comprobar si este parametro existe en la lista petits y por tanto es válido
+    (setq posicion (comprobar-si-existe petit (get 'spiro 'petits) (my-length (get 'spiro 'petits))))
+    
+    ; comprobar-si-existe devolverá nil o el numero de la posicion dependiendo de si 'petit' está en petits
+    (cond ((null posicion) (print "ERROR ---> El valor del radio no es valido o no existe"))
+        (t
+            ; El valor es válido, comprobar-si-existe ha devuelto la posicion de petit en petits
 
+            ; Se debe calcular el numero de pasos y el angulo t y llamar a la función spiro
+            ; Calcular numero de pasos:
+            ; numPasos = 2pi * (reduir rgran rpetit) * (rgran/rpetit)
+            (setq numPasos (realpart(round(* 2 pi (* (cadr (reduir gran petit)) (/ gran petit))))))
+            ; Calcular angulo t
+            ; t = (num puntos-punto)*(radipetit/num puntos)
+            (setq angulo (- (agafar-n 1 (agafar-n posicion (get 'spiro 'petits))) p))
+            (setq angulo (* angulo (/ petit (agafar-n 1 (agafar-n posicion (get 'spiro 'petits))))))
+            ; Llamada a spirograph con los valores calculados para pintar el spiro
+            (spirograph numPasos gran petit angulo inc inici)
+        )
+    )
 )
+
+; Función auxiliar que calcula la longitud de una lista
+(defun my-length (lista)
+    ; Posible caso de lista vacia: longitud = 0
+    (cond ((null lista) 0)
+        ; Si la lista no esta vacía, se aumenta contador y se llama recursivamente para cdr lista
+        (t (+ 1 ( my-length (cdr lista))))
+    )
+)
+
+; Función auxiliar que comprueba si una posicion dada existe en una lista dada
+(defun comprobar-si-existe (n l iteraciones)
+    ; Comprueba si el numero 'n' esta en la lista 'l'
+    (cond
+        ((> iteraciones 0)
+        ; Comprobación recursiva
+            ; Va de 0 a n-1 por tanto se le restará 1 a 'iteraciones'
+            (setq pos (- iteraciones 1))
+            ; Comprobar si está en la lista. Si está se devuelve la posicion, es decir, el numero
+            ; de circulo que este ocupa en la lista
+            (cond ((= n (agafar-n 0 (agafar-n pos l)))  pos)
+                ; Si no esta en posicion pos, comprobacion con llamada recursiva con (pos-1)
+                (t (comprobar-si-existe n l (- iteraciones 1)))
+            )
+        )
+    )
+)
+
