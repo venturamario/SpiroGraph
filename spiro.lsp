@@ -474,7 +474,7 @@
 ;
 ;-----------------------------------------------------------------
 
-;-----> 3.1
+;-----> 3.1 RODA
 (defun roda()
     ; Hace una simulación completa del spirograph cogiendo los valores que tiene
     ; el átomo 'spiro' en ese momento
@@ -486,7 +486,7 @@
     (spiro (get 'spiro 'rgran) (get 'spiro 'rpetit) (get 'spiro 'punt) (get 'spiro 'pas) (get 'spiro 'inici))
 )
 
-;-----> 3.2
+;-----> 3.2 RODA-VOLTES
 (defun roda-voltes (n)
     ; Hace lo mismo que (roda) pero con n vueltas
     ; El funcionamiento es idéntico a spiro, ya que este llama a spirograph diciéndole
@@ -519,7 +519,7 @@
     )
 )
 
-;-----> 3.3
+;-----> 3.3 SPIRO-VOLTES
 (defun spiro-voltes (voltes gran petit p in inici)
     ; Es igual al anterior pero simula el comportamiento de un spirograph de
     ; con los argumentos dados: voltes, gran, petit, p, in, inici 
@@ -547,33 +547,31 @@
     )
 )
 
-;-----> 3.4
+; -----> 3.4 SPIROS
 (defun spiros (l)
     ; Hace todas las simulaciones con las listas contenidas dentro de la lista l (el formato de cada
     ; elemento de la lista es una lista con los parametros correspondientes a la llamada a la funcion
     ; spiro: radigran, radipetit, p, incremento y angulo de inicio)
 
-    ; El planteamiento será llamar a 'spiro' para cada elemento de la lista l, podemos usar mapcar
+    ; El planteamiento será llamar a 'spiro' para cada elemento de la lista l. Podemos usar mapcar o
+    ; hacer un recorrido de la lista, pero mapcar es la opción más eficiente computacionalmente
     ; Contemplar que se pueda recibir una lista vacía
-    (cond ((null l) (print "La lista introducida esta vacia"))
+    (cond ((null l) (print "La lista introducida está vacía"))
     ; Lista no vacía, se puede usar mapcar sobre l
     (t
         ; Se aplicará lambda(lista) para todo elemento de l
         (mapcar (lambda (lista)
             ; Cuerpo de la función lambda(lista)
-            ; Se llama a otra función anónima que descomprima cada elemento de l en 5 parametros
-            (funcall (lambda(a b c d e)
-                ; Cuerpo de la función lambda(a b c d e)
-                ; Ahora ya se puede llamar a (spiro). Se hará pasándole como parámetros los elementos de la lista
-                ; Primer parámetro = primer elemento de 'lista', segundo parámetro = 2º elemento de 'lista', etc...
-                ; La lista cuenta con 5 elementos que van de índices 0 a 4
-                (spiro (agafar-n 0 lista) (agafar-n 1 lista) (agafar-n 2 lista) (agafar-n 3 lista) (agafar-n 4 lista)))
-            ))
-        l)
-    ))
+            ; Aplicamos la función (spiro) a todos los elementos de la lista 'lista'
+            (apply 'spiro lista))
+    l)))
 )
 
-;-----> 3.5
-(defun dibuix
-    ;
+; -----> 3.5 DIBUIX
+(defun dibuix ()
+    ; Pinta un juego de pruebas de 12 figuras que se trazan a partir de diferentes combinaciones
+    ; de circulos grandes, pequeños, interiores y exteriores usando todas las funciones de
+    ; dibujo del spirograph definidas en la practica
+
+    ; 
 )
