@@ -129,8 +129,8 @@
 ; Función auxiliar que llama a "move" de Lisp para desplazar la posición del lápiz a (x,y)
 ; (igual que la de los apuntes)
 (defun mover-lapiz (x y)
-    (move (realpart (round (+ 320 (* 1.8 x))))
-        (realpart (round (+ 187 (* 1.8 y)))))
+    (move (realpart (round (+ 320 (* (get 'spiro 'escala) x))))
+        (realpart (round (+ 187 (* (get 'spiro 'escala) y)))))
 )
 
 ; Función auxiliar dibujarcercle (igual que la de los apuntes)
@@ -148,8 +148,8 @@
 ; Función auxiliar pinta (igual que la de los apuntes)
 (defun pinta (x y)
     ; Llamada a la función draw de Lisp
-    (draw (realpart (round (+ 320 (* 1.8 x))))
-        (realpart (round (+ 187 (* 1.8 y)))))
+    (draw (realpart (round (+ 320 (* (get 'spiro 'escala) x))))
+        (realpart (round (+ 187 (* (get 'spiro 'escala) y)))))
 )
 
 ; Función auxiliar que convierte de grados a radianes
@@ -442,13 +442,13 @@
     )
 )
 
-; Función auxiliar que comprueba si una posicion dada existe en una lista dada
+; Función auxiliar que comprueba si un elemento "n" existe en una en una lista "l" iterando esta lista
 (defun comprobar-si-existe (n l iteraciones)
     ; Comprueba si el numero 'n' esta en la lista 'l'
     (cond
         ((> iteraciones 0)
         ; Comprobación recursiva
-            ; Va de 0 a n-1 por tanto se le restará 1 a 'iteraciones'
+            ; Va de 0 a n-1 por tanto se le restará 1 a 'iteraciones' para guardar en 'pos'
             (setq pos (- iteraciones 1))
             ; Comprobar si está en la lista. Si está se devuelve la posicion, es decir, el numero
             ; de circulo que este ocupa en la lista
@@ -460,3 +460,120 @@
     )
 )
 
+
+;-----------------------------------------------------------------
+;---------------------------< PARTE 3 >---------------------------
+;-----------------------------------------------------------------
+;
+;   FUNCIONES:
+;   1. (roda)
+;   2. (roda-voltes n)
+;   3. (spiro-voltes voltes gran petit p in inici)
+;   4. (spiros l)
+;   5. (dibuix)
+;
+;-----------------------------------------------------------------
+
+;-----> 3.1
+(defun roda()
+    ; Hace una simulación completa del spirograph cogiendo los valores que tiene
+    ; el átomo 'spiro' en ese momento
+
+    ; Llamar a (roda) es equivalente a llamar a (spiro), pero con la comodidad de 
+    ; no tene que poner parámetros, ya que se usan los valores ya establecidos.
+    ; Llamaremos a (spiro) con los 'get' de sus propiedades como parámetro
+    ; (spiro (gran petit p inc inici))
+    (spiro (get 'spiro 'rgran) (get 'spiro 'rpetit) (get 'spiro 'punt) (get 'spiro 'pas) (get 'spiro 'inici))
+)
+
+;-----> 3.2
+(defun roda-voltes (n)
+    ; Hace lo mismo que (roda) pero con n vueltas
+    ; El funcionamiento es idéntico a spiro, ya que este llama a spirograph diciéndole
+    ; cuántas vueltas quiere hacer, por tanto, usaremos el código de (spiro) con pequeñas
+    ; modificaciones
+
+    ; Esta función hace lo mismo que spirograph pero con un número de vueltas.
+    ; Se usa 'petits' en lugar de 'grans'
+
+    ; Se establece la posicion en la que se va a dibujar con el parametro 'petit'. Se tendrá que
+    ; comprobar si este parametro existe en la lista petits y por tanto es válido
+    (setq posicion (comprobar-si-existe petit (get 'spiro 'petits) (my-length (get 'spiro 'petits))))
+    
+    ; comprobar-si-existe devolverá nil o el numero de la posicion dependiendo de si 'petit' está en petits
+    (cond ((null posicion) (print "ERROR ---> El valor del radio no es valido o no existe"))
+        (t
+            ; El valor es válido, comprobar-si-existe ha devuelto la posicion de petit en petits
+
+            ; Se debe calcular el numero de pasos y el angulo t y llamar a la función spiro
+            ; Calcular numero de pasos:
+            ; numPasos = 2 * n * pi^2 / pi
+            (setq numPasos (realpart(round(*(*(* 2 pi) n) (/ pi 2)))))
+            ; Calcular angulo t
+            ; t = (num puntos-punto)*(radipetit/num puntos)
+            (setq angulo (- (agafar-n 1 (agafar-n posicion (get 'spiro 'petits))) (get 'spiro 'punt)))
+            (setq angulo (* angulo (/ (get 'spiro 'rpetit) (agafar-n 1 (agafar-n posicion (get 'spiro 'petits))))))
+            ; Llamada a spirograph con los valores calculados para pintar el spiro
+            (spirograph numPasos (get 'spiro 'rgran) (get 'spiro 'rpetit) angulo (get 'spiro 'pas) (get 'spiro 'inici))
+        )
+    )
+)
+
+;-----> 3.3
+(defun spiro-voltes (voltes gran petit p in inici)
+    ; Es igual al anterior pero simula el comportamiento de un spirograph de
+    ; con los argumentos dados: voltes, gran, petit, p, in, inici 
+
+    ; Se establece la posicion en la que se va a dibujar con el parametro 'petit'. Se tendrá que
+    ; comprobar si este parametro existe en la lista petits y por tanto es válido
+    (setq posicion (comprobar-si-existe petit (get 'spiro 'petits) (my-length (get 'spiro 'petits))))
+    
+    ; comprobar-si-existe devolverá nil o el numero de la posicion dependiendo de si 'petit' está en petits
+    (cond ((null posicion) (print "ERROR ---> El valor del radio no es valido o no existe"))
+        (t
+            ; El valor es válido, comprobar-si-existe ha devuelto la posicion de petit en petits
+
+            ; Se debe calcular el numero de pasos y el angulo t y llamar a la función spiro
+            ; Calcular numero de pasos:
+            ; numPasos = 2 * n * pi^2 / pi
+            (setq numPasos (realpart(round(*(*(* 2 pi) n) (/ pi 2)))))
+            ; Calcular angulo t
+            ; t = (num puntos-punto)*(radipetit/num puntos)
+            (setq angulo (- (agafar-n 1 (agafar-n posicion (get 'spiro 'petits))) p))
+            (setq angulo (* angulo (/ petit (agafar-n 1 (agafar-n posicion (get 'spiro 'petits))))))
+            ; Llamada a spirograph con los valores calculados para pintar el spiro
+            (spirograph numPasos gran petit angulo in inici)
+        )
+    )
+)
+
+;-----> 3.4
+(defun spiros (l)
+    ; Hace todas las simulaciones con las listas contenidas dentro de la lista l (el formato de cada
+    ; elemento de la lista es una lista con los parametros correspondientes a la llamada a la funcion
+    ; spiro: radigran, radipetit, p, incremento y angulo de inicio)
+
+    ; El planteamiento será llamar a 'spiro' para cada elemento de la lista l, podemos usar mapcar
+    ; Contemplar que se pueda recibir una lista vacía
+    (cond ((null l) (print "La lista introducida esta vacia"))
+    ; Lista no vacía, se puede usar mapcar sobre l
+    (t
+        ; Se aplicará lambda(lista) para todo elemento de l
+        (mapcar (lambda (lista)
+            ; Cuerpo de la función lambda(lista)
+            ; Se llama a otra función anónima que descomprima cada elemento de l en 5 parametros
+            (funcall (lambda(a b c d e)
+                ; Cuerpo de la función lambda(a b c d e)
+                ; Ahora ya se puede llamar a (spiro). Se hará pasándole como parámetros los elementos de la lista
+                ; Primer parámetro = primer elemento de 'lista', segundo parámetro = 2º elemento de 'lista', etc...
+                ; La lista cuenta con 5 elementos que van de índices 0 a 4
+                (spiro (agafar-n 0 lista) (agafar-n 1 lista) (agafar-n 2 lista) (agafar-n 3 lista) (agafar-n 4 lista)))
+            ))
+        l)
+    ))
+)
+
+;-----> 3.5
+(defun dibuix
+    ;
+)
